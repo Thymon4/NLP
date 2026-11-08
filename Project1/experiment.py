@@ -111,7 +111,7 @@ def cross_validation_split(pairs, k, seed=0):
 
     return cross_validation_sets
 
-def cross_validation_experiment(data_splits, outcome_space, encoder: 'Encoder', model_option:str, save_to="tmp", loglin_args=dict(), smlp_args=dict()):
+def cross_validation_experiment(data_splits, outcome_space, encoder: 'Encoder', model_option:str, save_to="tmp", loglin_args=dict(), smlp_args=dict(), dmlp_args=dict()):
     """
     Trains and evaluates k models using a k-fold data split for cross validation. 
     This function returns a dictionary with 
@@ -150,7 +150,13 @@ def cross_validation_experiment(data_splits, outcome_space, encoder: 'Encoder', 
                 training_set, validation_set, len(outcome_space), encoder, save_to=f'{fold_folder}/model', **smlp_args
             )
             models[fold] = f'{fold_folder}/model'
-            accuracies[fold] = metrics[best_epoch]['val_metrics']['accuracy']            
+            accuracies[fold] = metrics[best_epoch]['val_metrics']['accuracy']
+        elif model_option == 'dmlp':            
+            metrics, best_epoch, predictions[fold] = smlp.train_neural_network_model(
+                training_set, validation_set, len(outcome_space), encoder, save_to=f'{fold_folder}/model', **dmlp_args
+            )
+            models[fold] = f'{fold_folder}/model'
+            accuracies[fold] = metrics[best_epoch]['val_metrics']['accuracy']    
         else:
             raise ValueError(f"Unkonwn model_option={model_option}")
 
