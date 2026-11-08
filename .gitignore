@@ -222,3 +222,7 @@ __marimo__/
 .uv/
 .__pycache__/
 *.pyc/
+.venv/
+.uv/
+.__pycache__/
+*.pyc/
