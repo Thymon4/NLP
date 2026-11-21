@@ -120,10 +120,21 @@ def train(
 
     print("Tokenizing texts...")
     # Convert the training and validation sets to vectors
-    training_vectors = [tokenizer.ids(text) for text, label in training_set]
-    training_labels = [int(label) for text, label in training_set]
-    validation_vectors = [tokenizer.ids(text) for text, label in validation_set]
-    validation_labels = [int(label) for text, label in validation_set]
+    train_pairs = [
+        (ids, int(label))
+        for text, label in training_set
+        if len(ids := tokenizer.ids(text)) > 0
+    ]
+    training_vectors = [ids for ids, _ in train_pairs]
+    training_labels = [label for _, label in train_pairs]
+
+    validation_pairs = [
+        (ids, int(label))
+        for text, label in validation_set
+        if len(ids := tokenizer.ids(text)) > 0
+    ]
+    validation_vectors = [ids for ids, _ in validation_pairs]
+    validation_labels = [label for _, label in validation_pairs]
 
     time_tokenizing = time.time()
     print(f"Tokenization done! Time taken: {time_tokenizing - time_start:.3f} seconds")

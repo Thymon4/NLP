@@ -226,3 +226,4 @@ __marimo__/
 .uv/
 .__pycache__/
 *.pyc/
+*.pt
